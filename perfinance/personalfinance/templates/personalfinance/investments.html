@@ -1,0 +1,147 @@
+{% extends "personalfinance/layout.html" %}
+{% load static %}
+
+{% block script %}
+    <script src="{% static 'personalfinance/investments.js' %}"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js@2.9.3/dist/Chart.min.js"></script>
+{% endblock %}
+
+{% block body %}
+    <h1 id="message"></h1>
+    {% if user.is_authenticated %}
+        {% if investment %}
+            <section id="existing-investment">
+                <h2>Your Current Investment:</h2>
+                <h4>Investment Profile Name: <p id="investment_name">{{ investment.name }}</p></h4>
+                <h6>This investment was first prepared on {{ investment.timestamp }}</h6>
+                <!--<h6><em>This investment was last modified on: {{ investment.modified_date }}</em></h6>-->
+                <div class="p-2 bd-highlight">
+                    <label><strong>Monthly Investment: </strong></label> <p class="chart-data">{{investment.investment.savings}}</p>
+                    <p class="chart-data-monthly">
+                </div>
+                <div class="d-flex flex-row mb-3">
+                    <div class="p-2 bd-highlight label">
+                        <label><strong>Cash: </strong></label> <p class="chart-data">{{ investment.cash }}</p>
+                    </div>
+                    <div class="p-2 bd-highlight">
+                        <label><strong>Cash Monthly: </strong></label> <p class="chart-data-monthly">{{investment.cash_monthly}}</p>
+                    </div>
+                </div>
+                <div class="d-flex flex-row mb-3">
+                    <div class="p-2 bd-highlight label">
+                        <label><strong>Emergency: </strong></label> <p class="chart-data">{{ investment.emergency }}</p>
+                    </div>
+                    <div class="p-2 bd-highlight">
+                        <label><strong>Emergency Monthly: </strong></label> <p class="chart-data-monthly">{{investment.emergency_monthly}}</p>
+                    </div>
+                </div>
+                <div class="d-flex flex-row mb-3">
+                    <div class="p-2 bd-highlight label">
+                        <label><strong>Equity: </strong></label> <p class="chart-data">{{ investment.equity }}</p>
+                    </div>
+                    <div class="p-2 bd-highlight">
+                        <label><strong>Equity Monthly: </strong></label> <p class="chart-data-monthly">{{investment.equity_monthly}}</p>
+                    </div>
+                </div>
+                <div class="d-flex flex-row mb-3">
+                    <div class="p-2 bd-highlight label">
+                        <label><strong>Debt: </strong></label> <p class="chart-data">{{ investment.debt }}</p>
+                    </div>
+                    <div class="p-2 bd-highlight">
+                        <label><strong>Debt Monthly: </strong></label> <p class="chart-data-monthly">{{investment.debt_monthly}}</p>
+                    </div>
+                </div>
+                <div class="d-flex flex-row mb-3">
+                    <div class="p-2 bd-highlight label">
+                        <label><strong>Property: </strong></label> <p class="chart-data">{{ investment.property }}</p>
+                    </div>
+                    <div class="p-2 bd-highlight">
+                        <label><strong>Property Monthly: </strong></label> <p class="chart-data-monthly">{{investment.property_monthly}}</p>
+                    </div>
+                </div>
+                <div class="d-flex flex-row mb-3">
+                    <div class="p-2 bd-highlight label">
+                        <label><strong>Gold: </strong></label> <p class="chart-data">{{ investment.gold }}</p>
+                    </div>
+                    <div class="p-2 bd-highlight">
+                        <label><strong>Gold Monthly: </strong></label> <p class="chart-data-monthly">{{investment.gold_monthly}}</p>
+                    </div>
+                </div>
+                <div class="d-flex flex-row mb-3">
+                    <div class="p-2 bd-highlight label">
+                        <label><strong>Retirals: </strong></label> <p class="chart-data">{{ investment.retirals }}</p>
+                    </div>
+                    <div class="p-2 bd-highlight">
+                        <label><strong>Retirals Monthly: </strong></label> <p class="chart-data-monthly">{{investment.retirals_monthly}}</p>
+                    </div>
+                </div>
+                <div class="d-flex flex-row mb-3">
+                    <div class="p-2 bd-highlight label">
+                        <label><strong>Other: </strong></label> <p class="chart-data">{{ investment.other }}</p>
+                    </div>
+                    <div class="p-2 bd-highlight">
+                        <label><strong>Other Monthly: </strong></label> <p class="chart-data-monthly">{{investment.other_monthly}}</p>
+                    </div>
+                </div>
+                <div id="investment-button-holder">
+                    <button class="btn btn-primary" id="edit-button">Edit</button>
+                    <button class="btn btn-primary" id="investment-profile-select">Change Profile</button>
+                    <select class="form-select" id="investment-options">
+                        {% for profile in profiles %}
+                        <option value="{{ profile.id }}">{{ profile.name }}</option>
+                        {% endfor %}
+                    </select>
+                </div>
+                <div class="container fluid">
+                    <canvas id="monthlyInvestmentChart"></canvas>
+                </div>
+                <div class="container fluid">
+                    <canvas id="currentInvestmentChart"></canvas>
+                </div>
+            </section>
+        {% endif %}
+            <section id="new-investment">
+                <h2>Plan Your Investment</h2>
+                <div class="form-group d-flex justify-content-between bd-highlight mb-3">
+                    <div class="p-2 bd-highlight">
+                        <label><strong>Your Current Savings Budget: </strong></label><p class="chart-data" id="savings">{{no_investment.savings}}</p>
+                    </div>
+                    <div class="p-2 bd-highlight">
+                        <h2 id="remainder"></h2>
+                    </div>
+                </div>
+                <form action="{% url 'investment' %}" method="post">
+                    {% for item in items %}
+                        <div class="form-group d-flex p-2 bd-highlight">
+                            <div class="p-2 bd-highlight label">
+                                <label>{{item.capitalize}}</label>
+                            </div>
+                            <div class="p-2 bd-highlight">
+                                <input class="form-control investment-item-input" type="number" name={{item}} placeholder="Current Value" id={{item}} min="0">
+                            </div>
+                            <div class="p-2 bd-highlight">
+                                <input class="form-control investment-item-monthly-input" type="number" name={{item}}monthly placeholder="Monthly Amount" id={{item}}monthly min="0">
+                            </div>
+                            <div class="align-self-center flex-grow-1">
+                                <input type="range" class="form-range investment-item-slider" id="{{item}}Range">
+                            </div>
+                        </div>
+                    {% endfor %}
+                    {% csrf_token %}
+                    <input class="form-control" type="text" name="investment_profile" placeholder="Insert profile name" id="investment_profile">
+                    <input type="hidden" name="investment" id="hidden_investment_id" value="{{ no_investment.id }}">
+                    <input class="btn btn-primary" type="submit" value="New Investment Profile">
+                        {% if investment %}
+                            <input class="btn btn-success" type="button" data-investment-id="{{investment.id}}" id="save-button" value="Save">
+                            <input type="hidden" name="csrfmiddlewaretoken" value="{{ csrf_token }}">
+                        {% endif %}
+                </form>
+                <div class="container fluid">
+                    <canvas id="myChart"></canvas>
+                </div>
+            </section>
+    {% else %}
+        <p>Please Login / Register to create a budget and plan your investments.</p>
+    {% endif %}
+        <p class="helper"></p>
+{% endblock %}

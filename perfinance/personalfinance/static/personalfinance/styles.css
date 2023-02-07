@@ -1,0 +1,32 @@
+.form-control {
+    margin: 0 0 1em;
+}
+
+.label {
+    width: 170px;
+}
+
+p.chart-data {
+    display: inline;
+}
+
+p.chart-data-monthly {
+    display: inline;
+}
+
+.table-title {
+    display: disabled;
+    font-weight: bold;
+}
+
+#budget_name {
+    display: inline;
+}
+
+#investment_name {
+    display: inline;
+}
+
+.forecast-clean {
+    width: 200px;
+}

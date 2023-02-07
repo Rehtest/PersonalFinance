@@ -1,0 +1,142 @@
+{% extends "personalfinance/layout.html" %}
+{% load static %}
+
+
+{% block script %}
+    <script src="{% static 'personalfinance/forecast.js' %}"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js@2.9.3/dist/Chart.min.js"></script>
+{% endblock %}
+
+
+{% block body %}
+    {% if investment == None %}
+        <p>Please Create a budget and Plan your investments first.</p>
+    {% else %}
+        <h2>Your Current Investment:</h2>
+        <h4>Investment Profile Name: <p id="investment_name">{{ investment.name }}</p></h4>
+        <h6>This investment was first prepared on {{ investment.timestamp }}</h6>
+        <div class="p-2 bd-highlight">
+            <label><strong>Monthly Investment: </strong></label> <p class="chart-data">{{investment.investment.savings}}</p>
+            <p class="chart-data-monthly">
+        </div>
+        <div class="d-flex flex-row mb-3">
+            <div class="p-2 bd-highlight label">
+                <label><strong>Cash: </strong></label> <p class="chart-data">{{ investment.cash }}</p>
+            </div>
+            <div class="p-2 bd-highlight forecast-clean">
+                <label><strong>Cash Monthly: </strong></label> <p class="chart-data-monthly">{{investment.cash_monthly}}</p>
+            </div>
+            <div class="p-2 bd-highlight">
+                <input class="form-control annual-growth" type="number" name="cash" placeholder="% Annual Growth" id="cash" min="0">
+            </div>
+            <div class="p-2 bd-highlight">
+                <input class="form-control forecast-value" type="number" name="cash" placeholder="Forecast value" disabled>
+            </div>
+        </div>
+        <div class="d-flex flex-row mb-3">
+            <div class="p-2 bd-highlight label">
+                <label><strong>Emergency: </strong></label> <p class="chart-data">{{ investment.emergency }}</p>
+            </div>
+            <div class="p-2 bd-highlight forecast-clean">
+                <label><strong>Emergency Monthly: </strong></label> <p class="chart-data-monthly">{{investment.emergency_monthly}}</p>
+            </div>
+            <div class="p-2 bd-highlight">
+                <input class="form-control annual-growth" type="number" name="emergency" placeholder="% Annual Growth" id="emergency" min="0">
+            </div>
+            <div class="p-2 bd-highlight">
+                <input class="form-control forecast-value" type="number" name="cash" placeholder="Forecast value" disabled>
+            </div>
+        </div>
+        <div class="d-flex flex-row mb-3">
+            <div class="p-2 bd-highlight label">
+                <label><strong>Equity: </strong></label> <p class="chart-data">{{ investment.equity }}</p>
+            </div>
+            <div class="p-2 bd-highlight forecast-clean">
+                <label><strong>Equity Monthly: </strong></label> <p class="chart-data-monthly">{{investment.equity_monthly}}</p>
+            </div>
+            <div class="p-2 bd-highlight">
+                <input class="form-control annual-growth" type="number" name="equity" placeholder="% Annual Growth" id="equity" min="0">
+            </div>
+            <div class="p-2 bd-highlight">
+                <input class="form-control forecast-value" type="number" name="cash" placeholder="Forecast value" disabled>
+            </div>
+        </div>
+        <div class="d-flex flex-row mb-3">
+            <div class="p-2 bd-highlight label">
+                <label><strong>Debt: </strong></label> <p class="chart-data">{{ investment.debt }}</p>
+            </div>
+            <div class="p-2 bd-highlight forecast-clean">
+                <label><strong>Debt Monthly: </strong></label> <p class="chart-data-monthly">{{investment.debt_monthly}}</p>
+            </div>
+            <div class="p-2 bd-highlight">
+                <input class="form-control annual-growth" type="number" name="debt" placeholder="% Annual Growth" id="debt" min="0">
+            </div>
+            <div class="p-2 bd-highlight">
+                <input class="form-control forecast-value" type="number" name="cash" placeholder="Forecast value" disabled>
+            </div>
+        </div>
+        <div class="d-flex flex-row mb-3">
+            <div class="p-2 bd-highlight label">
+                <label><strong>Property: </strong></label> <p class="chart-data">{{ investment.property }}</p>
+            </div>
+            <div class="p-2 bd-highlight forecast-clean">
+                <label><strong>Property Monthly: </strong></label> <p class="chart-data-monthly">{{investment.property_monthly}}</p>
+            </div>
+            <div class="p-2 bd-highlight">
+                <input class="form-control annual-growth" type="number" name="property" placeholder="% Annual Growth" id="property" min="0">
+            </div>
+            <div class="p-2 bd-highlight">
+                <input class="form-control forecast-value" type="number" name="cash" placeholder="Forecast value" disabled>
+            </div>
+        </div>
+        <div class="d-flex flex-row mb-3">
+            <div class="p-2 bd-highlight label">
+                <label><strong>Gold: </strong></label> <p class="chart-data">{{ investment.gold }}</p>
+            </div>
+            <div class="p-2 bd-highlight forecast-clean">
+                <label><strong>Gold Monthly: </strong></label> <p class="chart-data-monthly">{{investment.gold_monthly}}</p>
+            </div>
+            <div class="p-2 bd-highlight">
+                <input class="form-control annual-growth" type="number" name="gold" placeholder="% Annual Growth" id="gold" min="0">
+            </div>
+            <div class="p-2 bd-highlight">
+                <input class="form-control forecast-value" type="number" name="cash" placeholder="Forecast value" disabled>
+            </div>
+        </div>
+        <div class="d-flex flex-row mb-3">
+            <div class="p-2 bd-highlight label">
+                <label><strong>Retirals: </strong></label> <p class="chart-data">{{ investment.retirals }}</p>
+            </div>
+            <div class="p-2 bd-highlight forecast-clean">
+                <label><strong>Retirals Monthly: </strong></label> <p class="chart-data-monthly">{{investment.retirals_monthly}}</p>
+            </div>
+            <div class="p-2 bd-highlight">
+                <input class="form-control annual-growth" type="number" name="retirals" placeholder="% Annual Growth" id="retirals" min="0">
+            </div>
+            <div class="p-2 bd-highlight">
+                <input class="form-control forecast-value" type="number" name="cash" placeholder="Forecast value" disabled>
+            </div>
+        </div>
+        <div class="d-flex flex-row mb-3">
+            <div class="p-2 bd-highlight label">
+                <label><strong>Other: </strong></label> <p class="chart-data">{{ investment.other }}</p>
+            </div>
+            <div class="p-2 bd-highlight forecast-clean">
+                <label><strong>Other Monthly: </strong></label> <p class="chart-data-monthly">{{investment.other_monthly}}</p>
+            </div>
+            <div class="p-2 bd-highlight">
+                <input class="form-control annual-growth" type="number" name="other" placeholder="% Annual Growth" id="other" min="0">
+            </div>
+            <div class="p-2 bd-highlight">
+                <input class="form-control forecast-value" type="number" name="cash" placeholder="Forecast value" disabled>
+            </div>
+        </div>
+        <h4 id="months"></h4>
+        <div class="align-self-center flex-grow-1">
+            <input type="range" class="form-range month-slider" id="month-slider" min="0" max="120">
+        </div>
+        <div class="container fluid">
+            <canvas id="myChart"></canvas>
+        </div>
+    {% endif %}
+{% endblock %}
